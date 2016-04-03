@@ -61,7 +61,7 @@ function upload($myfile){
 function add_img($path, $save ){
     $path= 'photo.php';
 //    echo '<a href='.$path.'>'.'<img src='.$save.'>'.'</a>';//  выводим картинку на экран в виде ссылки
-   echo '<a href='.$path.'>'.'<img src='.$save.'>'.'</a>';//  выводим картинку на экран в виде ссылки
+   echo '<a href='.$path.'>'.'<img src='.$save.'>'.'</a>';//  делаем ссылку на photo.php
      
 }
 
@@ -109,13 +109,13 @@ function create_thumbnail($path, $save, $width, $height) {
 
 }
 
-function send_inform($id, $photoName, $photoSize,$photoPath )
+function send_inform( $photoName, $photoSize,$photoPath )
 {
 	$connect = $_SESSION['mysql_connect'];
     
 	      	
- $sql = "INSERT INTO photo (id_photo, photo_name, photo_size, photo_path) 
-			VALUES ('$id', '$photoName', '$photoSize', '$photoPath')";
+ $sql = "INSERT INTO photo ( photo_name, photo_size, photo_path) 
+			VALUES ( '$photoName', '$photoSize', '$photoPath')";
 		   
  $result = mysqli_query($connect, $sql);
 									
@@ -123,9 +123,10 @@ function send_inform($id, $photoName, $photoSize,$photoPath )
 		die(mysqli_error($connect));		   
 }
 
-function get_photo (){
+function get_photo ($id){
+    
     $connect = $_SESSION['mysql_connect']; 
-    $sql ="SELECT photo_path FROM photo WHERE id_photo = 1;";//так выглядит запрос в базе данных
+    $sql ="SELECT photo_path FROM photo WHERE id_photo = $id ;";//так выглядит запрос в базе данных
     $result = mysqli_query($connect, $sql);
         
     if (!$result)
@@ -133,14 +134,11 @@ function get_photo (){
 
 	while($row = mysqli_fetch_assoc($result)) // mysqli_fetch_assoc($result) извлекает очередную строку из выборки данных и возвращает ее в пременную $row
 		$photo  = $row;
-
+    
         $path = $photo['photo_path'];
         echo '<img src='.$path.'>';
 // строки ниже нужны для понимания что содержится в $photo
 // var_export($photo);// содержит: array ( 'photo_path' => 'img/sport.jpg', )
 // var_export($photo[ 'photo_path']);// содержит:'img/sport.jpg'
-
-
-
 }
 ?>
