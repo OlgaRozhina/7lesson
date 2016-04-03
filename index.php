@@ -1,7 +1,22 @@
 <?php
+
 // Подключение модулей.
 include_once('startup.php');
 include_once('model.php');
+
+function send_inform($photoName, $photoSize,$photoPath )
+{
+	$connect = $_SESSION['mysql_connect'];
+	      	
+ $sql = "INSERT INTO photo ( photo_name, photo_size, photo_path) 
+			VALUES ( '$photoName', '$photoSize', '$photoPath')";
+		   
+ $result = mysqli_query($connect, $sql);
+									
+	if (!$result)
+		die(mysqli_error($connect));		   
+}
+
 
 // Подготовка.
 startup();
@@ -16,8 +31,7 @@ startup();
     </head>
 
     <body>
-       
-           
+                
 
         <?php 
          
@@ -33,19 +47,15 @@ startup();
                           $save ="img/copy/copy"."$fileName"; // путь, в котором будет лежать копия картинки
                           create_thumbnail($path, $save, $width, $height);
             
+            
             $connect = $_SESSION['mysql_connect'];
             $photoName = $_FILES['myfile']['name'];//  имя файла с расширением  
             $photoSize =$_FILES['myfile']['size']; //  размер файла
             $photoPath = 'img/'.$fileName;//  путь к картинке
             
-            
-            $sql = "INSERT INTO photo ( photo_name, photo_size, photo_path) 
-			VALUES ( '$photoName', '$photoSize', '$photoPath')";
-		   
-	        $result = mysqli_query($connect, $sql);
-            
-                                                                   
-                    $dir = scandir ('img/copy/');
+            send_inform($photoName, $photoSize,$photoPath );
+
+                     $dir = scandir ('img/copy/');
                     unset($dir[0]); // .
 		            unset($dir[1]); // ..
                     
@@ -56,13 +66,6 @@ startup();
                         echo "<br>";
                         $save = "img/copy/".$d;// переопределяем $save
                         add_img($path, $save );
-                        
-                         
-           
-                        
-                        
-                        
-                        
                         
                      }
         }
