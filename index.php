@@ -4,20 +4,6 @@
 include_once('startup.php');
 include_once('model.php');
 
-function send_inform($photoName, $photoSize,$photoPath )
-{
-	$connect = $_SESSION['mysql_connect'];
-	      	
- $sql = "INSERT INTO photo ( photo_name, photo_size, photo_path) 
-			VALUES ( '$photoName', '$photoSize', '$photoPath')";
-		   
- $result = mysqli_query($connect, $sql);
-									
-	if (!$result)
-		die(mysqli_error($connect));		   
-}
-
-
 // Подготовка.
 startup();
 ?>
@@ -41,6 +27,7 @@ startup();
                // если один из кейсов true , то загружаем фаил и выводи его в галерею в виде ссылки         
                         upload($_FILES['myfile']);
                           $fileName = $_FILES['myfile']['name'];//  имя файла   с расширением
+                          $_SESSION ['myfileName'] = $fileName;//делаем переменную доступной для страницы photo.php
                           $path = 'img/'.$fileName;//  путь к картинке, которую будем уменьшать
                           $width = 50; // ширина копии картинки
                           $height = 50;// высота копии картинки 
@@ -48,12 +35,16 @@ startup();
                           create_thumbnail($path, $save, $width, $height);
             
             
-            $connect = $_SESSION['mysql_connect'];
+//            $connect = $_SESSION['mysql_connect'];
             $photoName = $_FILES['myfile']['name'];//  имя файла с расширением  
             $photoSize =$_FILES['myfile']['size']; //  размер файла
             $photoPath = 'img/'.$fileName;//  путь к картинке
+            $id =1;// разобраться как его увеличивать
+         
+            send_inform($id, $photoName, $photoSize,$photoPath );
             
-            send_inform($photoName, $photoSize,$photoPath );
+               
+            
 
                      $dir = scandir ('img/copy/');
                     unset($dir[0]); // .
@@ -66,6 +57,7 @@ startup();
                         echo "<br>";
                         $save = "img/copy/".$d;// переопределяем $save
                         add_img($path, $save );
+                                              
                         
                      }
         }

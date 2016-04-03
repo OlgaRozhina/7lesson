@@ -13,7 +13,8 @@ function startup()
 	mysqli_select_db($connect, $dbName) or die('No data base');
 
 	// Открытие сессии.
-	session_start();	
+//	session_start();	
 
 	$_SESSION['mysql_connect'] = $connect;
 }
+?>

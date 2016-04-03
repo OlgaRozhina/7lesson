@@ -1,5 +1,11 @@
 <?php
 
+// подключаем связь с базой
+include_once('startup.php');
+// Подготовка.
+startup();
+
+
 function get_messages()
 {
 	$connect = $_SESSION['mysql_connect'];
@@ -53,9 +59,9 @@ function upload($myfile){
 
 
 function add_img($path, $save ){
-    
-    echo '<a href='.$path.'>'.'<img src='.$save.'>'.'</a>';//  выводим картинку на экран в виде ссылки
-   
+    $path= 'photo.php';
+//    echo '<a href='.$path.'>'.'<img src='.$save.'>'.'</a>';//  выводим картинку на экран в виде ссылки
+   echo '<a href='.$path.'>'.'<img src='.$save.'>'.'</a>';//  выводим картинку на экран в виде ссылки
      
 }
 
@@ -103,4 +109,38 @@ function create_thumbnail($path, $save, $width, $height) {
 
 }
 
+function send_inform($id, $photoName, $photoSize,$photoPath )
+{
+	$connect = $_SESSION['mysql_connect'];
+    
+	      	
+ $sql = "INSERT INTO photo (id_photo, photo_name, photo_size, photo_path) 
+			VALUES ('$id', '$photoName', '$photoSize', '$photoPath')";
+		   
+ $result = mysqli_query($connect, $sql);
+									
+	if (!$result)
+		die(mysqli_error($connect));		   
+}
+
+function get_photo (){
+    $connect = $_SESSION['mysql_connect']; 
+    $sql ="SELECT photo_path FROM photo WHERE id_photo = 1;";//так выглядит запрос в базе данных
+    $result = mysqli_query($connect, $sql);
+        
+    if (!$result)
+		die(mysqli_error($connect));
+
+	while($row = mysqli_fetch_assoc($result)) // mysqli_fetch_assoc($result) извлекает очередную строку из выборки данных и возвращает ее в пременную $row
+		$photo  = $row;
+
+        $path = $photo['photo_path'];
+        echo '<img src='.$path.'>';
+// строки ниже нужны для понимания что содержится в $photo
+// var_export($photo);// содержит: array ( 'photo_path' => 'img/sport.jpg', )
+// var_export($photo[ 'photo_path']);// содержит:'img/sport.jpg'
+
+
+
+}
 ?>
