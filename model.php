@@ -102,4 +102,23 @@ function get_photo ($id){
 // var_export($photo);// содержит: array ( 'photo_path' => 'img/sport.jpg', )
 // var_export($photo[ 'photo_path']);// содержит:'img/sport.jpg'
 }
+  function get_data_from_db () {
+    $connect = $_SESSION['mysql_connect']; 
+    $sql ="SELECT * FROM photo;";//так выглядит запрос в базе данных
+    $result = mysqli_query($connect, $sql);
+            
+    $allPhoto = array (); // по просто пустой массив 
+            
+    if (!$result)
+		die(mysqli_error($connect));
+
+	while($row = mysqli_fetch_assoc($result)) // mysqli_fetch_assoc($result) извлекает очередную строку из выборки данных и возвращает ее в пременную $row
+		$allPhoto[]  = $row;
+        
+        return $allPhoto;
+            //  данный код нужен чтобы видеть что находится в массиве
+//            echo "<pre>";
+//            var_export ($allPhoto);    
+//            echo "</pre>";
+           }
 ?>

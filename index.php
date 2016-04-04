@@ -8,7 +8,7 @@ include_once('model.php');
 startup();
 ?>
 
- <!DOCTYPE html>
+    <!DOCTYPE html>
     <html>
 
     <head>
@@ -17,7 +17,7 @@ startup();
     </head>
 
     <body>
-                
+
 
         <?php 
          
@@ -38,11 +38,11 @@ startup();
 
                 send_inform( $photoName, $photoSize,$photoPath ); // отпраляем информацию о загруженном файле в базу данных 
                 
-                echo "данные отправлены в таблицу";
+                echo "Данные отправлены в таблицу";
                 echo "<br>";
             }
             else {
-                echo "ПОВТОРНО НЕ ОТПРАВИЛ!";
+                echo "ПОВТОРНО НЕ ОТПРАВЛЯЕМ!";
             }
             
             
@@ -50,65 +50,20 @@ startup();
                   upload($_FILES['myfile']);// загрузка файла на сервер
             
             
-             // получаем массив из базы данных из таблицы фото
-    $connect = $_SESSION['mysql_connect']; 
-    $sql ="SELECT * FROM photo;";//так выглядит запрос в базе данных
-    $result = mysqli_query($connect, $sql);
+        // получаем массив из базы данных из таблицы фото
+            $allPhoto = get_data_from_db ();
             
-    $allPhoto = array (); // по просто пустой массив 
-            
-    if (!$result)
-		die(mysqli_error($connect));
-
-	while($row = mysqli_fetch_assoc($result)) // mysqli_fetch_assoc($result) извлекает очередную строку из выборки данных и возвращает ее в пременную $row
-		$allPhoto[]  = $row;
-            //  данный код нужен чтобы видеть что находится в массиве
-//            echo "<pre>";
-//            var_export ($allPhoto);    
-//            echo "</pre>";
-           
-            
-           for ($i = 0;$i < count ($allPhoto); $i++){
+          // запускаем полученные данные в цикл и выводим картинки в виде ссылок
+            for ($i = 0;$i < count ($allPhoto); $i++){
                
                 $id = $allPhoto[$i]['id_photo'];        
                 $path = $allPhoto[$i]['photo_path'];
                          echo "<br>";
-               echo "<a href = photo.php?id=$id><img src= $path width = 50px height = 50px></a>";
+               echo "<a href = photo.php?id=$id><img src= $path width = 50px height = 50px></a>";  // здесь нужно помнить чтобы параметры ушли в $_GET <a href = photo.php?id=$id> нельзя делать пробелы после знака "?"
            }
             
-            
-            
-            
-            
-            
-//        $path = $photo['photo_path'];
-//        echo '<img src='.$path.'>';
-// строки ниже нужны для понимания что содержится в $photo
-// var_export($photo);// содержит: array ( 'photo_path' => 'img/sport.jpg', )
-// var_export($photo[ 'photo_path']);// содержит:'img/sport.jpg'
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-//             // выводи массив картинок
-//                     $dir = scandir ('img/');
-//                    unset($dir[0]); // .
-//		            unset($dir[1]); // ..
-//                    foreach ($dir as $d){
-//                        if($d == '__DS.Store')
-//			             continue; 
-//                        echo $d; // содержит имя фаила с расширением например pic1.png
-//                        echo "<br>";              
-//                      echo '<a href='.$path.'>'.'<img src=img/'.$d.' width = 50px height = 50px >'.'</a>';                   
                      }
-//        }
+
         else {
             echo "Выберите файл для загрузки!";
                 } 
@@ -118,9 +73,10 @@ startup();
         
         
         ?>
-        
-        
-         <br><br>
+
+
+            <br>
+            <br>
             <form action="" method="post" enctype="multipart/form-data">
                 <input type="file" name="myfile" />
                 <input type="submit" value="Загрузить фаил!">

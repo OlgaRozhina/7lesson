@@ -5,8 +5,9 @@ include_once('model.php');
 
 // Подготовка.
 startup(); // соединение с базой
-
-echo $id = $_GET['id']; 
+//  получаем  id
+$id = $_GET['id'];
+//  выводим картинку на экран по id
 get_photo ($id);
-//echo "<img src =# $_GET['id']>";
+
 ?>
