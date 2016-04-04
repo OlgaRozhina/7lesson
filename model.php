@@ -5,45 +5,6 @@ include_once('startup.php');
 // Подготовка.
 startup();
 
-
-function get_messages()
-{
-	$connect = $_SESSION['mysql_connect'];
-	
-	$sql = "SELECT * FROM messages ORDER BY dt DESC";	
-	$result = mysqli_query($connect, $sql);
-	
-	if (!$result)
-		die(mysqli_error($connect));
-	
-	$arr = array();
-
-	while($row = mysqli_fetch_assoc($result))
-		$arr[] = $row;
-
-	return $arr;		
-}
-
-function send_message($name, $text)
-{
-	$connect = $_SESSION['mysql_connect'];
-	
-	$name = trim(htmlspecialchars($name));
-	$text = trim(htmlspecialchars($text));
-
-	if ($name == "" || $text == "")
-		return;
-
-	$dt = date('Y-m-d H:i:s');
-	
-	$sql = "INSERT INTO messages (dt, name, text) 
-			VALUES ('$dt', '$name', '$text')";
-		   
-	$result = mysqli_query($connect, $sql);
-									
-	if (!$result)
-		die(mysqli_error($connect));		   
-}
 function upload($myfile){
             
         if(is_uploaded_file($myfile["tmp_name"])) // Проверяем загружен ли файл

@@ -6,11 +6,7 @@ include_once('model.php');
 // Подготовка.
 startup(); // соединение с базой
 
-get_photo (1); // подгрузка фото по id
-
-
-
-
-
-
+echo $id = $_GET['id']; 
+get_photo ($id);
+//echo "<img src =# $_GET['id']>";
 ?>
