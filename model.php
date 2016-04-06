@@ -102,12 +102,67 @@ function get_photo ($id){
 // var_export($photo);// содержит: array ( 'photo_path' => 'img/sport.jpg', )
 // var_export($photo[ 'photo_path']);// содержит:'img/sport.jpg'
 }
-  function get_data_from_db () {
+
+//function get_data_from_db () {
+//    $connect = $_SESSION['mysql_connect']; 
+//    $sql ="SELECT * FROM photo;";//так выглядит запрос в базе данных
+//    $result = mysqli_query($connect, $sql);
+//            
+//    $allPhoto = array (); // по просто пустой массив 
+//            
+//    if (!$result)
+//		die(mysqli_error($connect));
+//
+//	while($row = mysqli_fetch_assoc($result)) // mysqli_fetch_assoc($result) извлекает очередную строку из выборки данных и возвращает ее в пременную $row
+//		$allPhoto[]  = $row;
+//        
+//        return $allPhoto;
+//            //  данный код нужен чтобы видеть что находится в массиве
+////            echo "<pre>";
+////            var_export ($allPhoto);    
+////            echo "</pre>";
+//           }
+
+function update_views($id, $views){
+	$connect = $_SESSION['mysql_connect'];
+	
+	$sql = "UPDATE photo SET views = " . (int)$views . " WHERE id_photo = " . (int)$id; 
+	
+	mysqli_query($connect, $sql);
+     echo "данные обнавлены в бд ";  
+        
+    }
+
+
+
+function get_views($id){
+     
     $connect = $_SESSION['mysql_connect']; 
-    $sql ="SELECT * FROM photo;";//так выглядит запрос в базе данных
+    $sql ="SELECT views FROM photo WHERE id_photo = $id ;";//так выглядит запрос в базе данных
     $result = mysqli_query($connect, $sql);
-            
-    $allPhoto = array (); // по просто пустой массив 
+        
+    if (!$result)
+		die(mysqli_error($connect));
+
+	while($row = mysqli_fetch_assoc($result)) // mysqli_fetch_assoc($result) извлекает очередную строку из выборки данных и возвращает ее в пременную $row
+		$photo  = $row;
+    
+        $views = $photo['views'];
+        echo " текущее число просмотров = ".$views."<br>";
+      return $views;
+}
+
+function get_data_from_db () {
+    
+    $connect = $_SESSION['mysql_connect']; 
+    // сначала посылаем запрос на сортировку данных в бд по количеству просмотров views
+    $sql="SELECT * FROM photo ORDER BY `views` DESC LIMIT 1000;";
+//     mysqli_query($connect, $first_sql);  
+    // птом отправлем запрос на получение таблицы
+    
+//    $sql ="SELECT * FROM photo;";//так выглядит запрос в базе данных
+    $result = mysqli_query($connect, $sql);
+         $allPhoto = array (); //  просто пустой массив 
             
     if (!$result)
 		die(mysqli_error($connect));
@@ -116,9 +171,12 @@ function get_photo ($id){
 		$allPhoto[]  = $row;
         
         return $allPhoto;
-            //  данный код нужен чтобы видеть что находится в массиве
-//            echo "<pre>";
-//            var_export ($allPhoto);    
-//            echo "</pre>";
+//              данный код нужен чтобы видеть что находится в массиве
+            echo "<pre>";
+            var_export ($allPhoto);    
+            echo "</pre>";
            }
+
+
+
 ?>

@@ -19,38 +19,43 @@ startup();
     <body>
 
 
-        <?php 
-         
+        <?php
+        error_reporting(E_ALL);
+        
+                            
+        
                  
-        if(isset($_FILES['myfile'])) {
-            
+        if(isset($_FILES['myfile'])) {            
 //            var_export($_FILES['myfile']);// просто выводим содержимое на экран
             
-           $fileName = $_FILES['myfile']['name'];//  имя загруженного файла   с расширением
+           $fileName = $_FILES['myfile']['name'];//  имя загруженного файла   с расширением 
+           $path = 'img/'.$fileName;//  путь к картинке, которую будем уменьшать
             
-            $path = 'img/'.$fileName;//  путь к картинке, которую будем уменьшать
+                          if (!file_exists ($path)){
+                          // подготовка переменных для загрузки файла на сервер
+                          $photoName = $_FILES['myfile']['name'];//  имя файла с расширением  
+                          $photoSize =$_FILES['myfile']['size']; //  размер файла
+                          $photoPath = 'img/'.$_FILES['myfile']['name'];//  путь к картинке
+ 
+                              //    если один из кейсов true , то загружаем фаил и выводи его в галерею в виде ссылки         
+                                upload($_FILES['myfile']);// загрузка файла на сервер
+                                send_inform( $photoName, $photoSize,$photoPath ); // отпраляем информацию о загруженном файле в базу данных 
+                              echo "Данные отправлены в таблицу"."<br>";
+                              
+                          }
+                          else {
+                              echo "ПОВТОРНО информацию в БД НЕ ОТПРАВЛЯЕМ!";
+                              echo "<br>";
+                          }
+                          
+        }
             
-            if (!file_exists ($path)){
-            // подготовка переменных для загрузки файла на сервер
-            $photoName = $_FILES['myfile']['name'];//  имя файла с расширением  
-            $photoSize =$_FILES['myfile']['size']; //  размер файла
-            $photoPath = 'img/'.$_FILES['myfile']['name'];//  путь к картинке
-
-                send_inform( $photoName, $photoSize,$photoPath ); // отпраляем информацию о загруженном файле в базу данных 
-                
-                echo "Данные отправлены в таблицу";
-                echo "<br>";
-            }
-            else {
-                echo "ПОВТОРНО НЕ ОТПРАВЛЯЕМ!";
-            }
+         else {
+            echo "Выберите файл для загрузки!";
+             echo "<br>";
+         } 
             
-            
-//                если один из кейсов true , то загружаем фаил и выводи его в галерею в виде ссылки         
-                  upload($_FILES['myfile']);// загрузка файла на сервер
-            
-            
-        // получаем массив из базы данных из таблицы фото
+            // получаем массив из базы данных из таблицы фото
             $allPhoto = get_data_from_db ();
             
           // запускаем полученные данные в цикл и выводим картинки в виде ссылок
@@ -58,19 +63,14 @@ startup();
                
                 $id = $allPhoto[$i]['id_photo'];        
                 $path = $allPhoto[$i]['photo_path'];
-                         echo "<br>";
                echo "<a href = photo.php?id=$id><img src= $path width = 50px height = 50px></a>";  // здесь нужно помнить чтобы параметры ушли в $_GET <a href = photo.php?id=$id> нельзя делать пробелы после знака "?"
+                  echo "<br>";             
            }
-            
-                     }
+                        
+                     
 
-        else {
-            echo "Выберите файл для загрузки!";
-                } 
-          
-        
-        
-        
+       
+       
         
         ?>
 
